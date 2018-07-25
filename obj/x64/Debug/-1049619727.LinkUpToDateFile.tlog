@@ -1,0 +1,1 @@
+g++ -o "/root/projects/Trans/bin/x64/Debug/Trans.out" -Wl,--no-undefined -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack /root/projects/Trans/obj/x64/Debug/main.o
