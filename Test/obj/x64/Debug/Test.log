@@ -1,0 +1,36 @@
+﻿生成启动时间为 2018/7/26 星期四 下午 06:35:02。
+     1>项目“F:\wavToMp3\Trans\Trans-1\Test\Test.vcxproj”在节点 2 上(Build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“F:\wavToMp3\Trans\Trans-1\Test\obj\x64\Debug\Test.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       _ValidateValidArchitecture:
+         Validating architecture
+         Current project architecture 'x64' is compatible with the remote system architecture 'x64' ('x64').
+       _ValidateSources:
+         Validating sources
+       _CopySources:
+         Copying sources remotely to '132.232.23.164'
+         Copying file 'F:\wavToMp3\Trans\Trans-1\Test\main.cpp' to '/root/projects/Test/main.cpp'
+       ClCompile:
+         Starting remote build
+         Compiling sources:
+         Invoking 'g++'
+         g++ -c -x c++ /root/projects/Test/main.cpp -g2 -gdwarf-2 -o "/root/projects/Test/obj/x64/Debug/main.o" -Wall -Wswitch -W"no-deprecated-declarations" -W"empty-body" -Wconversion -W"return-type" -Wparentheses -W"no-format" -Wuninitialized -W"unreachable-code" -W"unused-function" -W"unused-value" -W"unused-variable" -O0 -fno-strict-aliasing -fno-omit-frame-pointer -fthreadsafe-statics -fexceptions -frtti -std=c++11
+         main.cpp
+         Done compiling '/root/projects/Test/main.cpp'
+       Link:
+         Linking objects
+         Invoking 'ld'
+         g++ -o "/root/projects/Test/bin/x64/Debug/Test.out" -Wl,--no-undefined -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack /root/projects/Test/obj/x64/Debug/main.o
+         Done linking, output file name: '/root/projects/Test/bin/x64/Debug/Test.out'
+         Copying file '/root/projects/Test/bin/x64/Debug/Test.out' to 'F:\wavToMp3\Trans\Trans-1\Test\bin\x64\Debug\Test.out'
+         Test.vcxproj -> F:\wavToMp3\Trans\Trans-1\Test\bin\x64\Debug\Test.out
+       FinalizeBuildStatus:
+         正在删除文件“F:\wavToMp3\Trans\Trans-1\Test\obj\x64\Debug\Test.tlog\unsuccessfulbuild”。
+         正在对“F:\wavToMp3\Trans\Trans-1\Test\obj\x64\Debug\Test.tlog\Test.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“F:\wavToMp3\Trans\Trans-1\Test\Test.vcxproj”(Build 个目标)的操作。
+
+已成功生成。
+    0 个警告
+    0 个错误
+
+已用时间 00:00:04.94
