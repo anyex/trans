@@ -21,7 +21,7 @@
 
 
 static int processNum = 0;
-
+static char FinishFile[128];
 class MyString {
 public:
 	MyString(char* s) :str(s) {  };
@@ -114,9 +114,6 @@ class File {
 
 };
 
-
-
-
 class Ini {
 
 public:
@@ -162,49 +159,13 @@ public:
 	std::map <std::string, std::map<std::string, std::string> > Inid;
 	const std::string& filename;
 };
-
-void doTranslate(std::set<std::string>& set,Ini& ini)
+void Rename(char *oldname, char *flag)
 {
-	for (auto a : set)
-	{
-		std::string inputFilename = ini.Inid["set"]["input"];
-		std::string outputFilename = ini.Inid["set"]["output"];
-
-		//设置lame的输入输出参数
-		inputFilename.append("/");
-		std::string inputPath = inputFilename;
-		inputFilename.append(a);
-		outputFilename.append("/");
-		std::string b = a.substr(0, a.find("."));
-		outputFilename.append(b);
-		outputFilename.append(".mp3");
-
-		std::string cmdlame = "lame --preset fast standard ";
-		cmdlame.append(inputFilename);
-		cmdlame.append(" ");
-		cmdlame.append(outputFilename);
-
-
-		std::cout << cmdlame << std::endl;
-		/*使用lame转换文件*/
-		Shell lame(cmdlame);
-
-		/*修改转换后的名称*/
-		inputPath.append("-");
-		inputPath.append(a);
-
-		std::string rename = "rename ";
-		rename.append(inputFilename);
-		rename.append(" ");
-		rename.append(inputPath);
-		rename.append(" ");
-		rename.append(inputFilename);
-
-		//std::cout << rename << std::endl;
-		Shell srename(rename);
-
-		set.erase(a);
-	}
+	char newName[128], name[128];
+	sscanf(oldname, "%[^.]", name);
+	sprintf(newName, "%s%s%s", name, ".wav", flag);
+	printf("%s", newName);
+	rename(oldname, newName);
 }
 
 void readFile(std::set<std::string>&set, std::string&path)
@@ -219,12 +180,20 @@ void readFile(std::set<std::string>&set, std::string&path)
 		{
 			if (direntp->d_type == 8)//文件
 			{
-				file.append(Path);
-				file.append("/");
-				file.append(direntp->d_name);
+				std::string filename(direntp->d_name);
+				if (filename.find(".wav-") == -1)
+				{
+					file.append(Path);
+					file.append("/");
+					file.append(direntp->d_name);
+					set.insert(file);
+					file.clear();
+					if (set.size() >= 20)
+						sleep(5);
+				}
+				else
+					continue;
 				
-				set.insert(file);
-				file.clear();
 			}
 			if (direntp->d_type == 4)//目录
 			{
@@ -253,6 +222,7 @@ void sig_handle(int num)
 		{
 			printf("child process exit pid[%6d],exit code[%d]\n",pid,WEXITSTATUS(status));
 			processNum--;
+			Rename(FinishFile, "-");
 		}
 		else {
 			printf("child process exit but...\n");
@@ -276,14 +246,8 @@ void SetMp3(char* oldname,char* newName,char* out)//设置转换后的mp3的文件名称
 	strcpy(newName, newname);
 }
 
-void Rename(char *oldname,char *flag)
-{
-	char newName[128],name[128];
-	sscanf(oldname, "%[^.]", name);
-	sprintf(newName, "%s%s%s", name, ".wav",flag);
-	printf("%s", newName);
-	rename(oldname, newName);
-}
+
+
 
 
 
@@ -296,46 +260,47 @@ int main()
 	std::string file;
 	signal(SIGCHLD, sig_handle);
 	std::string input = ini.Inid["set"]["input"];
+	char mp3[128];
+	char wav[128];
+	char out[128];
 
-	
+	readFile(files, input);
 
-	//while (true)
+	while (true)
 	{
-		if (files.empty())
-		{
-			readFile(files, input);
-		}
 		
+
 		for (auto a : files)
 		{
+			
 			if (processNum < 4)
 			{
-				//if (vfork() == 0)
+				if (vfork() == 0)
 				{
 					processNum++;
 
-					char mp3[128];
-					char wav[128] = {};
-					char out[128];
 					strcpy(out, ini.Inid["set"]["output"].c_str());
 					strcpy(wav, a.c_str());
 					SetMp3(wav, mp3, out);
-
-				/*	char *cmd[] = { "--preset fast standard",wav,mp3,NULL };
+					strcpy(FinishFile, wav);
+					char *cmd[] = { "--preset fast standard",wav,mp3,NULL };
 					if (execv("/usr/bin/lame", cmd) <0)
 					{
 						perror("error on exec");
 						exit(0);
 					}
-					files.erase(a);
-					std::cout << a << std::endl;*/
-					Rename(wav, "_");
-
+				}
+				else
+				{
+					if (files.empty())
+					{
+						readFile(files, input);
+					}
 				}
 			}
 			else
-			{
-				sleep(1);
+			{	
+				sleep(2);
 			}
 			
 		}
